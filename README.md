@@ -8,7 +8,7 @@
 
 | release ver. | comment | date |
 |---|---|---|
-| 0.0 | Initial release. | 2024-05-01 |
+| [v0.0](releases/tag/v0.0) | Initial release. | 2024-05-01 |
 
 ## メモ
 ### M5Stack Core2 for AWS

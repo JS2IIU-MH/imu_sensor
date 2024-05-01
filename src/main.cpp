@@ -2,6 +2,7 @@
 // #include <M5Core2.h>
 #include <M5Unified.h>
 #include <MahonyAHRS.h>
+#include "view0.h"
 
 #define MAX_QUEUE_LENGTH 10
 #define GYRO_CAL_THRESHOLD 20
@@ -11,6 +12,9 @@
 Mahony filter;
 
 hw_timer_t *timer = NULL;
+
+// view0 class instantiation
+View0 m5view;
 
 volatile SemaphoreHandle_t timerSemaphore;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -131,30 +135,36 @@ void sensorUpdate(){
   Serial.printf("%6.2f %6.2f %6.2f\n", ave_yaw, ave_roll, ave_pitch);
   // Serial.printf("%6.2f %6.2f %6.2f\n", yaw, roll, pitch);
   
-  // M5.Imu.getAhrsData(&pitch, &roll, &yaw);
   // Stores the inertial sensor temperature
   M5.Imu.getTemp(&temp);
 
+  // m5view.showDetail(gyroX, gyroY, gyroZ,
+  //                   accX, accY, accZ,
+  //                   ave_roll, ave_pitch, ave_yaw,
+  //                   temp);
+
+  m5view.show(ave_roll, ave_pitch, ave_yaw);
+
   // Display
-  M5.Display.setCursor(0, 20);
-  M5.Display.printf("gyroX, gyroY, gyroZ");
-  M5.Display.setCursor(0, 42);
-  M5.Display.printf("%6.2f%6.2f%6.2f o/s ", gyroX, gyroY, gyroZ);
+  // M5.Display.setCursor(0, 20);
+  // M5.Display.printf("gyroX, gyroY, gyroZ");
+  // M5.Display.setCursor(0, 42);
+  // M5.Display.printf("%6.2f%6.2f%6.2f o/s ", gyroX, gyroY, gyroZ);
 
-  M5.Display.setCursor(0, 64);
-  M5.Display.printf("accX, accY, accZ");
-  M5.Display.setCursor(0, 86);
-  M5.Display.printf("%6.2f%6.2f%6.2f m/s^2", accX, accY, accZ);
+  // M5.Display.setCursor(0, 64);
+  // M5.Display.printf("accX, accY, accZ");
+  // M5.Display.setCursor(0, 86);
+  // M5.Display.printf("%6.2f%6.2f%6.2f m/s^2", accX, accY, accZ);
 
-  M5.Display.setCursor(0, 118);
-  M5.Display.printf("yaw, roll, pitch");
-  M5.Display.setCursor(0, 140);
-  M5.Display.printf("%6.2f%6.2f%6.2f deg", ave_yaw, ave_roll, ave_pitch);
+  // M5.Display.setCursor(0, 118);
+  // M5.Display.printf("yaw, roll, pitch");
+  // M5.Display.setCursor(0, 140);
+  // M5.Display.printf("%6.2f%6.2f%6.2f deg", ave_yaw, ave_roll, ave_pitch);
 
-  M5.Display.setCursor(0, 162);
-  M5.Display.printf("temp");
-  M5.Display.setCursor(0, 184);
-  M5.Display.printf("%6.2f degreeC", temp);
+  // M5.Display.setCursor(0, 162);
+  // M5.Display.printf("temp");
+  // M5.Display.setCursor(0, 184);
+  // M5.Display.printf("%6.2f degreeC", temp);
 }
 
 void IRAM_ATTR onTimer(){
@@ -205,6 +215,8 @@ void setup() {
   timerAlarmWrite(timer, 10000, true);
   // enable timer
   timerAlarmEnable(timer);
+
+
 
 }
 
