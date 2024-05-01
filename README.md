@@ -2,9 +2,13 @@
 `M5Stack Core2 for AWS`に搭載されたIMUを動作させる
 - `M5Unified.h`を使用する
 - IMUのyaw, roll, pitch の計算は`Mahony Orientation Filter`を使用する
-- センサ値はキャリブレーションを行う
+- センサ値はキャリブレーション、オフセット処理を行う
 
 開発環境は`VSCode + Platform.io`です。
+
+| release ver. | comment | date |
+|---|---|---|
+| 0.0 | Initial release. | 2024-05-01 |
 
 ## メモ
 ### M5Stack Core2 for AWS
