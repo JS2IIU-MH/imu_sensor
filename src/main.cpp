@@ -54,6 +54,10 @@ float Qroll[MAX_QUEUE_LENGTH];
 float Qpitch[MAX_QUEUE_LENGTH];
 float Qyaw[MAX_QUEUE_LENGTH];
 
+// touch button
+int btnStatus = 0;
+bool btnAStatus = false;
+
 
 void sensorUpdate(){
   M5.update();
@@ -138,33 +142,25 @@ void sensorUpdate(){
   // Stores the inertial sensor temperature
   M5.Imu.getTemp(&temp);
 
-  // m5view.showDetail(gyroX, gyroY, gyroZ,
-  //                   accX, accY, accZ,
-  //                   ave_roll, ave_pitch, ave_yaw,
-  //                   temp);
+  if(btnAStatus){
+    if(btnStatus == 0) {
+      btnStatus = 1;
+    } else {
+      btnStatus = 0;
+    }
+    btnAStatus = false;
+    m5view.flushView();
+  }
+  
+  if(btnStatus == 0){
+    m5view.showDetail(gyroX, gyroY, gyroZ,
+                      accX, accY, accZ,
+                      ave_roll, ave_pitch, ave_yaw,
+                      temp);
+  } else {
+    m5view.show(ave_roll, ave_pitch, ave_yaw);
+  }
 
-  m5view.show(ave_roll, ave_pitch, ave_yaw);
-
-  // Display
-  // M5.Display.setCursor(0, 20);
-  // M5.Display.printf("gyroX, gyroY, gyroZ");
-  // M5.Display.setCursor(0, 42);
-  // M5.Display.printf("%6.2f%6.2f%6.2f o/s ", gyroX, gyroY, gyroZ);
-
-  // M5.Display.setCursor(0, 64);
-  // M5.Display.printf("accX, accY, accZ");
-  // M5.Display.setCursor(0, 86);
-  // M5.Display.printf("%6.2f%6.2f%6.2f m/s^2", accX, accY, accZ);
-
-  // M5.Display.setCursor(0, 118);
-  // M5.Display.printf("yaw, roll, pitch");
-  // M5.Display.setCursor(0, 140);
-  // M5.Display.printf("%6.2f%6.2f%6.2f deg", ave_yaw, ave_roll, ave_pitch);
-
-  // M5.Display.setCursor(0, 162);
-  // M5.Display.printf("temp");
-  // M5.Display.setCursor(0, 184);
-  // M5.Display.printf("%6.2f degreeC", temp);
 }
 
 void IRAM_ATTR onTimer(){
@@ -216,12 +212,15 @@ void setup() {
   // enable timer
   timerAlarmEnable(timer);
 
-
-
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  M5.update();
+  if(M5.BtnA.wasReleased()){
+    btnAStatus = true;
+  }
+
   if(xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
     sensorUpdate();
   }

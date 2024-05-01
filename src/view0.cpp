@@ -7,7 +7,10 @@ void View0::show(float roll, float pitch, float yaw){
     const int title_width = 40;
     const int interval_y = 44;
 
+    // M5.Display.fillScreen(BLACK);
+    // M5.Display.setTextColor(WHITE, BLACK);
     M5.Display.setTextSize(4);
+
     M5.Display.setCursor(init_x, init_y);
     M5.Display.printf("R: %6.2f", roll);
 
@@ -16,7 +19,7 @@ void View0::show(float roll, float pitch, float yaw){
 
     M5.Display.setCursor(init_x, init_y + interval_y * 2);
     M5.Display.printf("Y: %6.2f", yaw);
-    
+
 }
 
 void View0::showDetail(float gyroX, float gyroY, float gyroZ,
@@ -24,6 +27,10 @@ void View0::showDetail(float gyroX, float gyroY, float gyroZ,
                         float ave_roll, float ave_pitch, float ave_yaw,
                         float temp){
     // Display
+    // M5.Display.fillScreen(BLACK);
+    // M5.Display.setTextColor(WHITE, BLACK);
+    M5.Display.setTextSize(2);
+
     M5.Display.setCursor(0, 20);
     M5.Display.printf("gyroX, gyroY, gyroZ");
     M5.Display.setCursor(0, 42);
@@ -47,4 +54,6 @@ void View0::showDetail(float gyroX, float gyroY, float gyroZ,
 }
 
 
-
+void View0::flushView(){
+    M5.Display.fillScreen(BLACK);
+}

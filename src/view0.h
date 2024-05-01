@@ -16,6 +16,9 @@ class View0
                         float accX, float accY, float accZ,
                         float roll, float pitch, float yaw,
                         float temp);
+        
+        // flush display
+        void flushView();
 };
 
 

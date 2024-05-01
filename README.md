@@ -33,6 +33,9 @@
   - [Arduino IDEでESP-WROOM-02のボード設定について #Arduino - Qiita](https://qiita.com/umi_kappa/items/ced90c258a14be165291)
 - [【推奨】lib_depsを指定してProject毎にインストールする](https://qiita.com/watarukato/items/455c74c625e178de385d#%E6%8E%A8%E5%A5%A8lib_deps%E3%82%92%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%A6project%E6%AF%8E%E3%81%AB%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B)
 
+- ボタン
+  - [M5Unified入門 その4 ボタン操作 | Lang-ship](https://lang-ship.com/blog/work/m5unified-4-button/#toc3)
+
 - timer化した時のトラブル
   - timer割り込みするたびにSW_CPU_RESETがかかってしまう。
   - flash frequencyあたりが怪しそう？？→関係なし。
