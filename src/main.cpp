@@ -2,6 +2,12 @@
 // #include <M5Core2.h>
 #include <M5Unified.h>
 #include <MahonyAHRS.h>
+
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+#include <BLE2902.h>
+
 #include "view0.h"
 #include "ble.h"
 
@@ -15,12 +21,16 @@
 #define SPEAKER_FREQ 440
 #define SPEAKER_DURATION 100
 
+#define BLE_LOCAL_NAME "M5Stack BLE"
+
 Mahony filter;
 
 hw_timer_t *timer = NULL;
 
 // view0 class instantiation
 View0 m5view;
+// BLE class instantiation
+BLE m5ble;
 
 volatile SemaphoreHandle_t timerSemaphore;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -64,6 +74,9 @@ float Qyaw[MAX_QUEUE_LENGTH];
 int btnStatus = 0;
 bool btnAStatus = false;
 
+// Bluetooth LE
+// BLEAdvertising *pAdvertising = NULL;
+// BLECharacteristic* pCharacteristic = NULL;
 
 void sensorUpdate(){
   // M5.update();
@@ -142,11 +155,13 @@ void sensorUpdate(){
   ave_yaw = sum / float(MAX_QUEUE_LENGTH);
   sum = 0.0F;
 
-  Serial.printf("%6.2f %6.2f %6.2f\n", ave_yaw, ave_roll, ave_pitch);
-  // Serial.printf("%6.2f %6.2f %6.2f\n", yaw, roll, pitch);
-  
   // Stores the inertial sensor temperature
   M5.Imu.getTemp(&temp);
+
+  // Serial.printf("%6.2f %6.2f %6.2f\n", ave_yaw, ave_roll, ave_pitch);
+  // Serial.printf("%6.2f %6.2f %6.2f\n", yaw, roll, pitch);
+  // m5ble.sendBLEMsg(ave_yaw, ave_roll, ave_pitch, temp);
+  // m5ble.testBLEMsg(ave_yaw);
 
   if(btnAStatus){
     if(btnStatus == 0) {
@@ -156,6 +171,7 @@ void sensorUpdate(){
     }
     btnAStatus = false;
     m5view.flushView();
+    Serial.println("#### btnA released ###");
   }
   
   if(btnStatus == 0){
@@ -207,10 +223,12 @@ void setup() {
   }
 
   // Bluetooth LE setup, start Server and adviertising
-  BLEDevice::init("M5Stack BLE");
+  BLEDevice::init(BLE_LOCAL_NAME);
   BLEServer *pServer = BLEDevice::createServer();
-  startService(pServer);
-  startAdvertising();
+  pServer->setCallbacks(new MyServerCallbacks());
+  m5ble.startService(pServer);
+  // *pAdvertising = m5ble.startAdvertising();
+  m5ble.startAdvertising();
 
   // timer semaphore
   timerSemaphore = xSemaphoreCreateBinary();
@@ -231,6 +249,7 @@ void loop() {
   M5.update();
   if(M5.BtnA.wasReleased()){
     btnAStatus = true;
+    // m5ble.testBLEMsg(ave_yaw);
   }
 
   if(xSemaphoreTake(timerSemaphore, 0) == pdTRUE){

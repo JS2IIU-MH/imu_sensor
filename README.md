@@ -31,6 +31,7 @@
 - [開始方法 :: AWS IoT Kit](https://aws-iot-kit-docs.m5stack.com/ja/getting-started/)
 
 ### M5Unified.h
+- [__m5stack/M5Unified: Unified library for M5Stack series__](https://github.com/m5stack/M5Unified) M5UnifiedのGitHubリポジトリ。多数のサンプルあり。
 - [m5-docs M5Unifiedへの移植のポイント](https://docs.m5stack.com/ja/arduino/m5unified/migration)
 - 基本設定を`platformio.ini`に書く必要がある。ArduinoIDEの時にはGUIで設定していた内容。以下のページに詳細あり。
   - [Espressif 32 — PlatformIO v6.1 documentation](https://docs.platformio.org/en/latest/platforms/espressif32.html)
@@ -77,7 +78,12 @@
   - BLErole: Peripheral
   - Server, Advertiseを行う
     - The server advertises its existence, so it can be found by other devices and contains data that the client can read. The client scans the nearby devices, and when it finds the server it is looking for, it establishes a connection and listens for incoming data. This is called point-to-point communication.
+  - データの送り方はこちらを参照した
+    - [M5StackでBLE環境センサ端末を作る - AmbientでIoTをはじめよう](https://pages.switch-science.com/letsiot/bleperiph/)
 - [Online UUID Generator Tool](https://www.uuidgenerator.net/)
+- 要注意
+  - このプログラムではセンサの値を定期的に読むために割り込みを使っている。割り込みとBLEの`notify()`が干渉して`rst:0xc (SW_CPU_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)`が発生した
+  - 相手とのコネクションが確立していない状態でnotifyしてよいのか？
 
 ### PlatformIO
 - [マイコン開発するならPlatformIOがめちゃくちゃいいぞ #C++ - Qiita](https://qiita.com/JotaroS/items/1930f156aab953194c9a)
