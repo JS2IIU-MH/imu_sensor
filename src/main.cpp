@@ -3,6 +3,7 @@
 #include <M5Unified.h>
 #include <MahonyAHRS.h>
 #include "view0.h"
+#include "ble.h"
 
 #define BAUDRATE 115200
 #define MAX_QUEUE_LENGTH 10
@@ -204,6 +205,12 @@ void setup() {
     Qroll[i] = 0.0F;
     Qyaw[i] = 0.0F;
   }
+
+  // Bluetooth LE setup, start Server and adviertising
+  BLEDevice::init("M5Stack BLE");
+  BLEServer *pServer = BLEDevice::createServer();
+  startService(pServer);
+  startAdvertising();
 
   // timer semaphore
   timerSemaphore = xSemaphoreCreateBinary();

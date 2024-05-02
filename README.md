@@ -12,6 +12,7 @@
   - roll, pitch, yawの値は100ms区間の平均値を表示・出力する
 - 表示画面が2種類、詳細表示、簡易表示があり、それらをボタンAをタッチすることで切り替える
 - roll, pitch, yawの値はUARTで出力する
+- Bluetooth LEのペリフェラルとしてふるまう。アドバタイジングを行い、センサの値を出力する。
 
 <img src="doc\imu_sensor_img.png" width=600>
 
@@ -69,6 +70,14 @@
 - [Mahony Orientation Filter — AHRS 0.3.1 documentation](https://ahrs.readthedocs.io/en/latest/filters/mahony.html)
 - [M5StickCのIMU(AHRS)研究 その1 標準ライブラリ | Lang-ship](https://lang-ship.com/blog/work/m5stickc-imu-ahrs/)
 - [IMU Mahony filter explanation. Mahony filter is proposed by Robert… | by Teddy Lai | Apr, 2024 | Medium](https://medium.com/@k66115704/imu-mahony-filter-explanation-1ae75bf033ab)
+
+### Bluetooth LE
+- 概要
+  - このプログラムはセンサ側のプログラムである。センサ情報を相手側に送信する役割をもつ
+  - BLErole: Peripheral
+  - Server, Advertiseを行う
+    - The server advertises its existence, so it can be found by other devices and contains data that the client can read. The client scans the nearby devices, and when it finds the server it is looking for, it establishes a connection and listens for incoming data. This is called point-to-point communication.
+- [Online UUID Generator Tool](https://www.uuidgenerator.net/)
 
 ### PlatformIO
 - [マイコン開発するならPlatformIOがめちゃくちゃいいぞ #C++ - Qiita](https://qiita.com/JotaroS/items/1930f156aab953194c9a)
