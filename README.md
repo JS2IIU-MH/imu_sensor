@@ -15,10 +15,14 @@
 
 <img src="doc\imu_sensor_img.png" width=600>
 
+## リリース
+詳細は各リリースのページをご覧ください。
+
 | release ver. | comment | date |
 |---|---|---|
 | [v0.0](../../releases/tag/v0.0) | Initial release. | 2024-05-01 |
 | [v0.1](../../releases/tag/v0.1) | Modify display function. | 2024-05-02 |
+| v0.2 | Add wireless communication via Bluetooth LE | comming soon |
 
 ## メモ
 ### M5Stack Core2 for AWS
