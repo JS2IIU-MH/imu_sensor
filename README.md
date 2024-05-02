@@ -6,6 +6,15 @@
 
 開発環境は`VSCode + Platform.io`です。
 
+## アプリの概要
+- M5Stack内蔵IMUデータを画面表示する
+  - 100Hzでセンサデータを読み出して、10Hzでデータ表示を更新する
+  - roll, pitch, yawの値は100ms区間の平均値を表示・出力する
+- 表示画面が2種類、詳細表示、簡易表示があり、それらをボタンAをタッチすることで切り替える
+- roll, pitch, yawの値はUARTで出力する
+
+<img src="doc\imu_sensor_img.png" width=600>
+
 | release ver. | comment | date |
 |---|---|---|
 | [v0.0](releases/tag/v0.0) | Initial release. | 2024-05-01 |

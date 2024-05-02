@@ -4,10 +4,15 @@
 #include <MahonyAHRS.h>
 #include "view0.h"
 
+#define BAUDRATE 115200
 #define MAX_QUEUE_LENGTH 10
 #define GYRO_CAL_THRESHOLD 20
 #define CAL_COUNT 500
 #define YAW_DELTA_LIM 200
+
+#define SPEAKER_VOLUME 3
+#define SPEAKER_FREQ 440
+#define SPEAKER_DURATION 100
 
 Mahony filter;
 
@@ -60,7 +65,7 @@ bool btnAStatus = false;
 
 
 void sensorUpdate(){
-  M5.update();
+  // M5.update();
 
   // Stores the triaxial gyroscope data of the inertial sensor to the relevant
   M5.Imu.getGyroData(&gyroX, &gyroY, &gyroZ);
@@ -177,7 +182,7 @@ void setup() {
   // put your setup code here, to run once:
   // Init M5Core
   auto cfg = M5.config();
-  cfg.serial_baudrate = 115200;
+  cfg.serial_baudrate = BAUDRATE;
   cfg.output_power = true;
   cfg.internal_imu = true;
 
