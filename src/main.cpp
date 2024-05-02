@@ -2,15 +2,24 @@
 // #include <M5Core2.h>
 #include <M5Unified.h>
 #include <MahonyAHRS.h>
+#include "view0.h"
 
+#define BAUDRATE 115200
 #define MAX_QUEUE_LENGTH 10
 #define GYRO_CAL_THRESHOLD 20
 #define CAL_COUNT 500
 #define YAW_DELTA_LIM 200
 
+#define SPEAKER_VOLUME 3
+#define SPEAKER_FREQ 440
+#define SPEAKER_DURATION 100
+
 Mahony filter;
 
 hw_timer_t *timer = NULL;
+
+// view0 class instantiation
+View0 m5view;
 
 volatile SemaphoreHandle_t timerSemaphore;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -50,9 +59,13 @@ float Qroll[MAX_QUEUE_LENGTH];
 float Qpitch[MAX_QUEUE_LENGTH];
 float Qyaw[MAX_QUEUE_LENGTH];
 
+// touch button
+int btnStatus = 0;
+bool btnAStatus = false;
+
 
 void sensorUpdate(){
-  M5.update();
+  // M5.update();
 
   // Stores the triaxial gyroscope data of the inertial sensor to the relevant
   M5.Imu.getGyroData(&gyroX, &gyroY, &gyroZ);
@@ -131,30 +144,28 @@ void sensorUpdate(){
   Serial.printf("%6.2f %6.2f %6.2f\n", ave_yaw, ave_roll, ave_pitch);
   // Serial.printf("%6.2f %6.2f %6.2f\n", yaw, roll, pitch);
   
-  // M5.Imu.getAhrsData(&pitch, &roll, &yaw);
   // Stores the inertial sensor temperature
   M5.Imu.getTemp(&temp);
 
-  // Display
-  M5.Display.setCursor(0, 20);
-  M5.Display.printf("gyroX, gyroY, gyroZ");
-  M5.Display.setCursor(0, 42);
-  M5.Display.printf("%6.2f%6.2f%6.2f o/s ", gyroX, gyroY, gyroZ);
+  if(btnAStatus){
+    if(btnStatus == 0) {
+      btnStatus = 1;
+    } else {
+      btnStatus = 0;
+    }
+    btnAStatus = false;
+    m5view.flushView();
+  }
+  
+  if(btnStatus == 0){
+    m5view.showDetail(gyroX, gyroY, gyroZ,
+                      accX, accY, accZ,
+                      ave_roll, ave_pitch, ave_yaw,
+                      temp);
+  } else {
+    m5view.show(ave_roll, ave_pitch, ave_yaw);
+  }
 
-  M5.Display.setCursor(0, 64);
-  M5.Display.printf("accX, accY, accZ");
-  M5.Display.setCursor(0, 86);
-  M5.Display.printf("%6.2f%6.2f%6.2f m/s^2", accX, accY, accZ);
-
-  M5.Display.setCursor(0, 118);
-  M5.Display.printf("yaw, roll, pitch");
-  M5.Display.setCursor(0, 140);
-  M5.Display.printf("%6.2f%6.2f%6.2f deg", ave_yaw, ave_roll, ave_pitch);
-
-  M5.Display.setCursor(0, 162);
-  M5.Display.printf("temp");
-  M5.Display.setCursor(0, 184);
-  M5.Display.printf("%6.2f degreeC", temp);
 }
 
 void IRAM_ATTR onTimer(){
@@ -171,7 +182,7 @@ void setup() {
   // put your setup code here, to run once:
   // Init M5Core
   auto cfg = M5.config();
-  cfg.serial_baudrate = 115200;
+  cfg.serial_baudrate = BAUDRATE;
   cfg.output_power = true;
   cfg.internal_imu = true;
 
@@ -210,6 +221,11 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  M5.update();
+  if(M5.BtnA.wasReleased()){
+    btnAStatus = true;
+  }
+
   if(xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
     sensorUpdate();
   }
